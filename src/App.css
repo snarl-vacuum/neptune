@@ -1,0 +1,21 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0rem;
+  text-align: center;
+}
+
+.main {
+  border-style: double;
+  margin: 6px;
+  padding: 10px;
+}
+
+.pa {
+  margin: 4px;
+}
+
+.results {
+  background-color: lightgrey;
+}
+
