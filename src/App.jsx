@@ -14,6 +14,7 @@ class App extends React.Component {
             <div className="App">
                 <h2>Air Quality Assessment</h2>
                 <CityAirQuality id="caq1" />
+                <CityAirQuality id="caq2" />
             </div>
         )
     }
