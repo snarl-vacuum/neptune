@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom'
 import React from 'react'
+import { Formik, Form, ErrorMessage } from 'formik';
 import SelectCountry from './SelectCountry';
 import CityAQResults from './CityAQResults';
 import './App.css'
@@ -111,13 +112,12 @@ const CustomInput = React.forwardRef(function CustomInput(props, ref) {
       <InputUnstyled slots={{ input: StyledInputElement }} {...props} ref={ref} />
     );
 });
-  
+
 export default class CityAirQuality extends React.Component {
     constructor(props) {
         super(props)
         this.handleCountryChange = this.handleCountryChange.bind(this);
         this.handleCityChange = this.handleCityChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             country : "",
             city : "",
@@ -127,9 +127,7 @@ export default class CityAirQuality extends React.Component {
       
     handleCountryChange = (country) => {
         //alert('CityAirQuality.handleCountryChange:'+country);
-        if(country.length>0) {
-            this.state.country = country;
-        }
+        this.state.country = country;
     }
 
     handleCityChange = (event)  => {    
@@ -137,42 +135,67 @@ export default class CityAirQuality extends React.Component {
         this.setState({city: event.target.value});  
     }
 
-    handleSubmit = (event) => {
-        //alert('country: '+this.state.country+' city: ' + this.state.city);
-        if(this.state.country.length>0 && this.state.city.length>0) {
-            const tempDiv = document.createElement("div");
-            tempDiv.setAttribute("id", this.state.idz);
-            ReactDOM.render(
-                <CityAQResults country={this.state.country}
-                    city={this.state.city} 
-                />, tempDiv
-                );
-            const containerDiv = document.getElementById(this.state.idz);
-            containerDiv.replaceWith(tempDiv);
-        }
-        event.preventDefault();
-    }
-
     render() {
         return (
             <div className="main">
-                <SelectCountry onCountryChange={ this.handleCountryChange } />
-                <div className="pa"/>
-                <form onSubmit={ this.handleSubmit }>        
+                <Formik
+                    initialValues={{ city: '', country: '' }}
+
+                    validate={values => {
+                        const errors = {};
+                        var city = this.state.city;
+                        var country = this.state.country;
+                        if (!city) {
+                            errors.city = 'City is a required field';
+                        } else if(city.length<2) {
+                            errors.city = 'City needs to be greater than equal 2 digits';
+                        } else if(city.length>40) {
+                            errors.city = 'City needs to be less than equal 40 digits';
+                        }
+                        if (!country) {
+                            errors.country = 'Country is a required field';
+                        } else if(country.length<2 || country.length>2) {
+                            errors.city = 'Country needs to be equal 2 digits';
+                        }
+                        return errors;
+                    }}
+
+                    onSubmit={(values) => {
+                        //alert('country: '+this.state.country+' city: ' + this.state.city);
+                        const tempDiv = document.createElement("div");
+                        tempDiv.setAttribute("id", this.state.idz);
+                        ReactDOM.render(
+                            <CityAQResults country={this.state.country}
+                                city={this.state.city} 
+                            />, tempDiv
+                            );
+                        const containerDiv = document.getElementById(this.state.idz);
+                        containerDiv.replaceWith(tempDiv);
+                    }} 
+                >
+                <Form> 
+                    <SelectCountry 
+                        onCountryChange={ this.handleCountryChange } 
+                    />
+                    <ErrorMessage name="country" className='validation-error-message' component="div" />
+                    <div className="pa"/>
                     <CustomInput id={ this.state.cidz } 
                         type="text" 
+                        name="city"
                         placeholder="Type city…"
                         value={ this.state.city } 
                         onChange={ this.handleCityChange } 
                     />
+                    <ErrorMessage name="city" className='validation-error-message' component="div" />
                     <div className="pa"/>
                     <CustomButton type="submit" value="Submit">
                         Submit
                     </CustomButton>
-                </form>
-                <div className="pa"/>
-                <div id={this.state.idz} />
-            </div>
+                </Form>
+            </Formik>
+            <div className="pa"/>
+            <div id={this.state.idz} />
+        </div>
         )
     }
 

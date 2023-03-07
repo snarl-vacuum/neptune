@@ -19,3 +19,6 @@
   background-color: lightgrey;
 }
 
+.validation-error-message {
+  color: red;
+}

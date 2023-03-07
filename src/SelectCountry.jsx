@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios'
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-
 export default class SelectCountry extends React.Component {
     constructor(props) {
         super(props)
@@ -16,8 +15,12 @@ export default class SelectCountry extends React.Component {
     }
       
     handleChange = (event, newValue) => {
-        //alert('handleChange:'+newValue.value);
-        this.props.onCountryChange(newValue.value);
+        var v = "";
+        if(newValue&&newValue.value) {
+            v = newValue.value;
+        }
+        //alert('SelectCountry.handleChange:'+v);
+        this.props.onCountryChange(v);
     }
 
     async getOptions() {
@@ -47,7 +50,6 @@ export default class SelectCountry extends React.Component {
             <div>
                 <Autocomplete
                     options={ this.state.selectOptions } 
-                    /*defaultValue={{ value: this.value, label: 'United States of America' }}*/
                     onChange={ this.handleChange } 
                     disabled={ this.state.isDisabled }
                     loading={ this.state.isLoading }
