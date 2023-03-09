@@ -164,9 +164,10 @@ export default class CityAirQuality extends React.Component {
                         //alert('country: '+this.state.country+' city: ' + this.state.city);
                         const tempDiv = document.createElement("div");
                         tempDiv.setAttribute("id", this.state.idz);
+                        const regex = /(<([^>]+)>)/ig;
                         ReactDOM.render(
                             <CityAQResults country={this.state.country}
-                                city={this.state.city} 
+                                city={this.state.city.replace(regex, '')} 
                             />, tempDiv
                             );
                         const containerDiv = document.getElementById(this.state.idz);
